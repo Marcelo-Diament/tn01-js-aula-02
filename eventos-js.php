@@ -12,7 +12,7 @@
             </article>
         </header>
         <article class="col-12 mx-auto my-4">
-            <h2 class="col-12">Prática 18 | Eventos</h2>
+            <h2 class="col-12">Prática 19 | Eventos</h2>
             <ul class="col-12 py-3">
                 <li class="my-5">
                     <h5>Visão Geral</h5>
@@ -80,13 +80,95 @@
                         </code>
                     </div>
                     <p class="mt-3">Opa! Olha só quantas propriedades temos no objeto <code>el</code>! Perceba que o elemento clicado pode ser acessado pela propriedade <code>el.target</code>. Também podemos ver onde exatamente o usuário clicou - em relação à página, usando os valores X (<code>el.pageX</code>) e Y (<code>el.pageY</code>) ou em relação à tela, usando os valores X (<code>el.screenX</code>) e Y (<code>el.screenY</code>).</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            body.onclick = ( el ) => {<br /><br />
+                                <span class="ml-3">console.log(`\nel\n`)</span><br />
+                                <span class="ml-3">console.log(el)</span><br /><br />
+                                <span class="ml-3">console.log(`\nel.target\n`)</span><br />
+                                <span class="ml-3">console.log(el.target)</span><br /><br />
+                                <span class="ml-3">console.log(`\nel.pageX = ${el.pageX} \n`)</span><br />
+                                <span class="ml-3">console.log(`\nel.pageY = ${el.pageY} \n`)</span><br />
+                                <span class="ml-3">console.log(`\nel.screenX = ${el.screenX} \n`)</span><br />
+                                <span class="ml-3">console.log(`\nel.screenY = ${el.screenY} \n`)</span><br /><br />
+                            }
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Disparo de eventos usando atributos</h5>
+                    <p>Também podemos utilizar atributos para dispararmos eventos, veja:</p>
+                    <div class="bg-light p-5 mb-3">
+                        <button class="btn btn-warning d-block mx-auto" onclick="alert('Viu só? Esse é um evento passado como atributo!')">CLICA NIMIN</button>
+                    </div>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            // CÓDIGO DO INPUT ACIMA<br />
+                            &lt;button class="btn btn-warning d-block mx-auto" onclick="alert('Viu só? Esse é um evento passado como atributo!')"&gt;<br />
+                            <span class="ml-3">CLICA NIMIN</span><br />
+                            &lt;/button&gt;<br />
+                        </code>
+                    </div>
+                    <p class="mt-3">O que fizemos foi passar o tipo de evento como atributo e, em seu valor, declaramos o que deveria ocorrer quando o evento fosse disparado.</p>
+                    <p class="mt-3">O trecho referente ao evento é: <code><b>onclik="alert('texto a ser exibido')"</b></code>. Da mesma forma, poderíamos ter uma função declarada e chamá-la quando o evento fosse disparado.</p>
+                </li>
+            </ul>
+        </article>
+        <article class="col-12 mx-auto my-4">
+            <h2 class="col-12">Prática 20 | addEventListener()</h2>
+            <ul class="col-12 py-3">
+                <li class="my-5">
+                    <h5>Como Funciona?</h5>
+                    <p class="mt-3">Temos ainda outra opção para configurarmos o disparo de eventos - utilizando o método <code>addEventListener()</code>. Basicamente nós definimos o tipo de evento e atrelamos uma função (que será executada quando o evento for disparado) - e os atrelamos ao <i>target</i> do evento (elemento que o dispara):</p>
+                    <div class="bg-light p-5 mb-3">
+                        <button class="btn btn-info d-block mx-auto" id="btnReacao">#btnReacao</button>
+                    </div>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            const btnReacao = document.querySelector('#btnReacao');<br /><br />
+                            btnReacao.addEventListener('click', function () {<br />
+                                <span class="ml-3">alert('Reagindo!')</span><br /><br />
+                            })<br /><br />
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Vantagens</h5>
+                    <p class="mt-3">Mas por que usar o <code>addEventListener()</code>? Pois podemos atrelar e 'desatrelar' eventos ao <i>target</i>. Mas... para isso precisaremos definir a função a ser executada fora do corpo do <code>addEventListener()</code>. Vamos lá:</p>
+                    <div class="bg-light p-5 mb-3">
+                        <button class="btn btn-primary d-block mx-auto" id="btnAddEventListener">#btnAddEventListener</button>
+                    </div>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            const btnAddEventListener = document.querySelector('#btnAddEventListener');<br /><br />
+                            function cumprimentar() {<br />
+                                <span class="ml-3">alert('Muito prazer!')</span><br />
+                            }<br /><br />
+                            btnAddEventListener.addEventListener('click', cumprimentar)
+                        </code>
+                    </div>
+                    <p class="mt-3">Agora vamos aplicar o <code>removeEventListener</code>:</p>
+                    <div class="bg-light p-5 mb-3">
+                        <button class="btn btn-danger d-block mx-auto" id="btnRemoveEventListener">#btnRemoveEventListener</button>
+                    </div>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            const btnRemoveEventListener = document.querySelector('#btnRemoveEventListener');<br /><br />
+                            function removerCumprimento() {<br />
+                                <span class="ml-3">btnAddEventListener.removeEventListener('click', cumprimentar)</span><br />
+                            }<br /><br />
+                            btnRemoveEventListener.addEventListener('click', removerCumprimento)
+                        </code>
+                    </div>
+                    <p class="mt-3">Agora clique no botão <i>#btnRemoveEventListener</i> e clique novamente no botão <i>#btnAddEventListener</i> para ver o que acontece!</p>
+                    <p class="mt-3">Atenção, para removermos uma função atrelada via <code>addEventListener</code> precisamos utilizar exatamente a mesma função (e podemos adicionar mais de uma função também/tipo de evento).</p>
                 </li>
             </ul>
             <p>Confiram o arquivo <a href="https://github.com/Marcelo-Diament/tn01-js-aula-02/blob/master/README.md" target="_blank" rel="noopener noreferrer" title="Veja o arquivo readme.md">README.md</a> do repositório para verem maiores informações.</p>
         </article>
     </section>
     <footer class="col-12 row mb-3">
-        <a href="./tipos-de-dados.php" class="w-25 btn btn-dark d-inline-block mr-auto mt-4 mb-3" id="voltarBtn"><i class="fas fa-chevron-left"></i> <b class="ml-4">Voltar</b></a>
+        <a href="./js-e-css.php" class="w-25 btn btn-dark d-inline-block mr-auto mt-4 mb-3" id="voltarBtn"><i class="fas fa-chevron-left"></i> <b class="ml-4">Voltar</b></a>
         <a href="./timing-events.php" class="w-25 btn btn-dark d-inline-block ml-auto mt-4 mb-3" id="avancarBtn"><b>Próximo</b> <i class="fas fa-chevron-right"></i></a>
     </footer>
 </main>
