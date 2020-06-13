@@ -20,7 +20,7 @@
                         <a class="nav-link" href="./eventos-js.php">Eventos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./eventos-de-tempo.php">Timing Events</a>
+                        <a class="nav-link" href="./timing-events.php">Timing Events</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./prevent-default.php">preventDefault()</a>
