@@ -21,7 +21,7 @@
                         <li class="mb-3">Verificar se o campo de email foi preenchido corretamente</li>
                         <li class="mb-3">Verificar se o campo de confirmação de email foi preenchido corretamente</li>
                         <li class="mb-3">Ocultarmos o valor do campo senha e guarar seu valor original em sessionStorage</li>
-                        <li class="mb-3">Verificara se a confirmação da senha casa com a senha inserida inicialmente</li>
+                        <li class="mb-3">Verificar se a confirmação da senha casa com a senha inserida inicialmente</li>
                         <li class="mb-3">Criar o campo CPF ou CNPJ de acordo com a opção 'Tipo de Cadastro' (PF ou PJ)</li>
                         <li class="mb-3">Formatar o campo de CEP (formato 00000-000)</li>
                         <li class="mb-3">Evitar que o disparo do formulário seja efetuado sem que todos os campos estejam preenchidos</li>
@@ -162,6 +162,32 @@
                                     <span class="ml-5">e.target.classList.add('text-danger')</span><br />
                                 <span class="ml-3">} else {</span><br />
                                     <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                                <span class="ml-3">}</span><br />
+                            }
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Verificando senha</h5>
+                    <p class="mt-3">Vamos validar a senha (as 3 condições).</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            senha.onblur = e => {<br /><br />
+                                <span class="ml-3">checkChars = /[+a-z|A-Z]/</span><br />
+                                <span class="ml-3">checkNums = /[+\d]/</span><br />
+                                <span class="ml-3">if ( e.target.value.length <= 5 ) {</span><br />
+                                    <span class="ml-5">e.target.focus()</span><br />
+                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                                <span class="ml-3">} else {</span><br />
+                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                                <span class="ml-3">}</span><br /><br />
+                                <span class="ml-3">} else if ( checkChars.test(e.target.value) !== true && checkNums.test(e.target.value) !== true ) {</span><br />
+                                    <span class="ml-5">e.target.focus()</span><br />
+                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                                    <span class="ml-5">senhaAlphaNum.classList.add('text-danger')</span><br />
+                                <span class="ml-3">} else {</span><br />
+                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                                    <span class="ml-5">senhaAlphaNum.classList.remove('text-danger')</span><br />
                                 <span class="ml-3">}</span><br />
                             }
                         </code>
