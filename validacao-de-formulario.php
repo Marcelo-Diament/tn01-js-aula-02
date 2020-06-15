@@ -18,18 +18,18 @@
                     <h5>Instruções</h5>
                     <p class="mt-3">A seguir temos um formulário montado com a ajuda do Bootstrap. Precisaremos realizar as seguintes tarefas:</p>
                     <ol class="col-12 font-weight-bold">
-                        <li class="mb-3">Verificar se o campo de email foi preenchido corretamente</li>
-                        <li class="mb-3">Verificar se o campo de confirmação de email foi preenchido corretamente</li>
-                        <li class="mb-3">Ocultarmos o valor do campo senha e guarar seu valor original em sessionStorage</li>
-                        <li class="mb-3">Verificar se a confirmação da senha casa com a senha inserida inicialmente</li>
-                        <li class="mb-3">Criar o campo CPF ou CNPJ de acordo com a opção 'Tipo de Cadastro' (PF ou PJ)</li>
-                        <li class="mb-3">Formatar o campo de CEP (formato 00000-000)</li>
+                        <li class="mb-3">Verificar se o campo de email foi preenchido corretamente (se possui @)</li>
+                        <li class="mb-3">Verificar se a confirmação de email coincide com o primeiro email</li>
+                        <li class="mb-3">Verificar se a senha possui letra maiúscula, minúscula, número, ao menos 6 caracteres e não contém espaço</li>
+                        <li class="mb-3">Verificar se a confirmação de senha coincide com a primeira senha</li>
+                        <!-- <li class="mb-3">Criar o campo CPF ou CNPJ de acordo com a opção 'Tipo de Cadastro' (PF ou PJ)</li> -->
+                        <li class="mb-3">Preencher o endereço a partir do CEP</li>
                         <li class="mb-3">Evitar que o disparo do formulário seja efetuado sem que todos os campos estejam preenchidos</li>
-                        <li class="mb-3">Confirmar todos os campos preenchidos (exceto a senha) numa caixa de diálogo do browser</li>
+                        <li class="mb-3">Confirmar os principais campos preenchidos (nome, sobrenome, email e CEP) numa caixa de diálogo do browser</li>
                         <li class="mb-3">Caso o usuário confirme todos os dados, abrir uma nova guia com um texto de confirmação de envio de mensagem</li>
                     </ol>
                     <div class="bg-light p-5">
-                        <form>
+                        <form id="meuForm" method="post" action="">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="nome">Nome</label>
@@ -44,10 +44,29 @@
                                 <div class="form-group col-md-6">
                                     <label for="email">Email</label>
                                     <input type="text" class="form-control" id="email" name="email" placeholder="exemplo@email.com">
+                                    <small id="emailError" class="d-none text-danger">Por favor, confira o email inserido</small>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="emailConfirm">Confirmação de email</label>
                                     <input type="text" class="form-control" id="emailConfirm" name="emailConfirm" placeholder="exemplo@email.com">
+                                    <small id="emailConfirmError" class="d-none text-danger">Atenção, os emails inseridos não coincidem</small>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="senha">Senha</label>
+                                    <input type="text" class="form-control" id="senha" name="senha" placeholder="*****" aria-describedby="senhaHelp">
+                                    <small id="passwordHelpInline" class="text-muted">
+                                        [<span id="senha6chars">Tem mais de 5 caracteres e não tem espaço</span> |
+                                        <span id="senhaAlphaNum">Tem números, maiúsculas e minúsculas</span>]
+                                    </small>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="senhaConfirm">Confirmação de Senha</label>
+                                    <input type="text" class="form-control" id="senhaConfirm" name="senhaConfirm" placeholder="*****" aria-describedby="senhaConfirmHelp">
+                                    <small id="senhaConfirmError" class="d-none text-danger">
+                                        <span>Atenção: essa senha não coincide com a anterior</span>
+                                    </small>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -84,26 +103,6 @@
                                     <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Centro">
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="senha">Senha</label>
-                                    <input type="text" class="form-control" id="senha" name="senha" placeholder="*****" aria-describedby="senhaHelp">
-                                    <small id="passwordHelpInline" class="text-muted">
-                                        [<span id="senha6chars">Tem mais de 6 caracteres</span> |
-                                        <span id="senhaAlphaNum">Tem números e letras</span> |
-                                        <span id="senhaSpecialChars">Tem caracteres especiais</span>]
-                                    </small>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="senhaConfirm">Confirmação de Senha</label>
-                                    <input type="text" class="form-control" id="senhaConfirm" name="senhaConfirm" placeholder="*****" aria-describedby="senhaConfirmHelp">
-                                    <small id="passwordHelpInline" class="text-muted">
-                                        [<span id="senhaConfirm6chars">Tem mais de 6 caracteres</span> |
-                                        <span id="senhaConfirmAlphaNum">Tem números e letras</span> |
-                                        <span id="senhaConfirmSpecialChars">Tem caracteres especiais</span>]
-                                    </small>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-primary" id="btnEnviar">Enviar</button>
                         </form>
                     </div>
@@ -128,9 +127,7 @@
                             const senhaAlphaNum = document.querySelector('#senhaAlphaNum')<br />
                             const senhaSpecialChars = document.querySelector('#senhaSpecialChars')<br />
                             const senhaConfirm = document.querySelector('#senhaConfirm')<br />
-                            const senhaConfirm6chars = document.querySelector('#senhaConfirm6chars')<br />
-                            const senhaConfirmAlphaNum = document.querySelector('#senhaConfirmAlphaNum')<br />
-                            const senhaConfirmSpecialChars = document.querySelector('#senhaConfirmSpecialChars')<br />
+                            const senhaConfirmEqual = document.querySelector('#senhaConfirmEqual')<br />
                             const btnEnviar = document.querySelector('#btnEnviar')
                         </code>
                     </div>
@@ -141,12 +138,15 @@
                     <div class="bg-dark p-5">
                         <code class="font-weight-bold">
                             email.onblur = e => {<br />
-                                <span class="ml-3">if ( e.target.value.includes('@') === false ) {</span><br />
-                                    <span class="ml-5">e.target.focus()</span><br />
-                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
-                                <span class="ml-3">} else {</span><br />
-                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
-                                <span class="ml-3">}</span><br />
+                            <span class="ml-3">if ( e.target.value.includes('@') === false ) {</span><br />
+                            <span class="ml-5">e.target.focus()</span><br />
+                            <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                            <span class="ml-5">emailError.classList.remove('d-none')</span><br />
+                            <span class="ml-5">(emailConfirm.value !== '' && emailConfirm.value !== email.value)<br /> ? emailConfirmError.classList.remove('d-none')<br /> : emailConfirmError.classList.add('d-none')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                            <span class="ml-5">emailError.classList.add('d-none')</span><br />
+                            <span class="ml-3">}</span><br />
                             }
                         </code>
                     </div>
@@ -157,38 +157,85 @@
                     <div class="bg-dark p-5">
                         <code class="font-weight-bold">
                             emailConfirm.onblur = e => {<br />
-                                <span class="ml-3">if ( e.target.value !== email.value ) {</span><br />
-                                    <span class="ml-5">e.target.focus()</span><br />
-                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
-                                <span class="ml-3">} else {</span><br />
-                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
-                                <span class="ml-3">}</span><br />
+                            <span class="ml-3">if ( e.target.value !== email.value ) {</span><br />
+                            <span class="ml-5">e.target.focus()</span><br />
+                            <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                            <span class="ml-5">emailConfirmError.classList.remove('d-none')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                            <span class="ml-5">emailConfirmError.classList.add('d-none')</span><br />
+                            <span class="ml-3">}</span><br />
                             }
                         </code>
                     </div>
                 </li>
                 <li class="my-5">
                     <h5>Verificando senha</h5>
-                    <p class="mt-3">Vamos validar a senha (as 3 condições).</p>
+                    <p class="mt-3">Vamos validar a senha (as 5 condições - maiúsculas, minúsculas, números, sem espaço e 6 caracteres no mínimo). Para isso usaremos um pouquinho de <i>Regular Expressions</i> - ou <i>RegExp</i>.</p>
+                    <p class="mt-3">Vale destacar que há formas mais sucintas para usarmos o <i>RegExp</i> (bem como poderíamos criar uma função para validar tudo de uma só vez), mas... a ideia é repetirmos alguns dos comandos para que fiquem bem claros, por isso faremos de uma maneira mais repetitiva e menos prática.</p>
                     <div class="bg-dark p-5">
                         <code class="font-weight-bold">
+                            temMaiuscula = /[+A-Z]/<br />
+                            temMinuscula = /[+a-z]/<br />
+                            temNumero = /[+0-9]/<br />
+                            naoTemEspaco = /\S{6,}/<br />
                             senha.onblur = e => {<br /><br />
-                                <span class="ml-3">checkChars = /[+a-z|A-Z]/</span><br />
-                                <span class="ml-3">checkNums = /[+\d]/</span><br />
-                                <span class="ml-3">if ( e.target.value.length <= 5 ) {</span><br />
-                                    <span class="ml-5">e.target.focus()</span><br />
-                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
-                                <span class="ml-3">} else {</span><br />
-                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
-                                <span class="ml-3">}</span><br /><br />
-                                <span class="ml-3">} else if ( checkChars.test(e.target.value) !== true && checkNums.test(e.target.value) !== true ) {</span><br />
-                                    <span class="ml-5">e.target.focus()</span><br />
-                                    <span class="ml-5">e.target.classList.add('text-danger')</span><br />
-                                    <span class="ml-5">senhaAlphaNum.classList.add('text-danger')</span><br />
-                                <span class="ml-3">} else {</span><br />
-                                    <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
-                                    <span class="ml-5">senhaAlphaNum.classList.remove('text-danger')</span><br />
-                                <span class="ml-3">}</span><br />
+                            <span class="ml-3">let senha = e.target.value</span><br />
+                            <span class="ml-3">if ( temMaiuscula.test(senha) && temMinuscula.test(senha) && temNumero.test(senha) && naoTemEspaco.test(senha) ) {</span><br />
+                            <span class="ml-5">e.target.classList.remove('text-danger')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-5">e.target.focus()</span><br />
+                            <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                            <span class="ml-3">}</span><br />
+                            <span class="ml-3">if ( temMaiuscula.test(senha) && temMinuscula.test(senha) && temNumero.test(senha) ) {</span><br />
+                            <span class="ml-5">senhaAlphaNum.classList.add('text-success')</span><br />
+                            <span class="ml-5">senhaAlphaNum.classList.remove('text-danger')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-5">senhaAlphaNum.classList.add('text-danger')</span><br />
+                            <span class="ml-5">senhaAlphaNum.classList.remove('text-success')</span><br />
+                            <span class="ml-3">}</span><br />
+                            <span class="ml-3">if ( naoTemEspaco.test(senha) ) {</span><br />
+                            <span class="ml-5">senha6chars.classList.add('text-success')</span><br />
+                            <span class="ml-5">senha6chars.classList.remove('text-danger')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-5">senha6chars.classList.add('text-danger')</span><br />
+                            <span class="ml-5">senha6chars.classList.remove('text-success')</span><br />
+                            <span class="ml-3">}</span><br /><br />
+                            }
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Verificando confirmação de senha</h5>
+                    <p class="mt-3">Vamos validar a senha confirmada (se é igual à primeira senha).</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            senhaConfirm.onblur = e => {<br />
+                            <span class="ml-3">if ( e.target.value !== senha.value ) {</span><br />
+                            <span class="ml-5">e.target.focus()</span><br />
+                            <span class="ml-5">e.target.classList.add('text-danger')</span><br />
+                            <span class="ml-5">senhaConfirmError.classList.remove('d-none')</span><br />
+                            <span class="ml-3">} else {</span><br />
+                            <span class="ml-3">e.target.classList.remove('text-danger')</span><br />
+                            <span class="ml-5">senhaConfirmError.classList.add('d-none')</span><br />
+                            <span class="ml-3">}</span><br />
+                            }
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Evitando o disparo da mensagem</h5>
+                    <p class="mt-3">Vamos usar o <code>preventDefault()</code>.</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            btnEnviar.onclick = e => {<br /><br />
+                            <span class="ml-3">e.preventDefault()</span><br />
+                            <span class="ml-3">confirmado = confirm(`<br />
+                            <span class="ml-5">Antes de enviar seu formulário, gostaríamos de confirmar seus dados:\n</span><br />
+                            <span class="ml-5">Nome: ${nome.value} ${sobrenome.value}\n</span><br />
+                            <span class="ml-5">Email: ${email.value}\n</span><br />
+                            <span class="ml-3">`)</span><br />
+                            <span class="ml-3">confirmado && document.querySelector('#meuForm').submit()</span><br /><br />
                             }
                         </code>
                     </div>
