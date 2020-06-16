@@ -18,11 +18,11 @@
                     <h5>Instruções</h5>
                     <p class="mt-3">A seguir temos um formulário montado com a ajuda do Bootstrap. Precisaremos realizar as seguintes tarefas:</p>
                     <ol class="col-12 font-weight-bold">
+                        <li class="mb-3">Incluir cada uma das UFs no select do form</li>
                         <li class="mb-3">Verificar se o campo de email foi preenchido corretamente (se possui @)</li>
                         <li class="mb-3">Verificar se a confirmação de email coincide com o primeiro email</li>
                         <li class="mb-3">Verificar se a senha possui letra maiúscula, minúscula, número, ao menos 6 caracteres e não contém espaço</li>
                         <li class="mb-3">Verificar se a confirmação de senha coincide com a primeira senha</li>
-                        <!-- <li class="mb-3">Criar o campo CPF ou CNPJ de acordo com a opção 'Tipo de Cadastro' (PF ou PJ)</li> -->
                         <li class="mb-3">Preencher o endereço a partir do CEP</li>
                         <li class="mb-3">Evitar que o disparo do formulário seja efetuado sem que todos os campos estejam preenchidos</li>
                         <li class="mb-3">Confirmar os principais campos preenchidos (nome, sobrenome, email e CEP) numa caixa de diálogo do browser</li>
@@ -81,7 +81,7 @@
                                 <div class="form-group col-md-3">
                                     <label for="uf">UF</label>
                                     <select id="uf" class="form-control">
-                                        <option selected value="">UF</option>
+                                        <option disabled selected value="">UF</option>
                                     </select>
                                 </div>
                             </div>
@@ -112,13 +112,15 @@
                     <p class="mt-3">Vamos deixar todos os seletores criados para depois focarmos em cada validação.</p>
                     <div class="bg-dark p-5">
                         <code class="font-weight-bold">
+                            const formulario = document.querySelector('#meuForm')<br />
                             const nome = document.querySelector('#nome')<br />
                             const sobrenome = document.querySelector('#sobrenome')<br />
                             const email = document.querySelector('#email')<br />
                             const emailConfirm = document.querySelector('#emailConfirm')<br />
                             const cep = document.querySelector('#cep')<br />
                             const cidade = document.querySelector('#cidade')<br />
-                            const estado = document.querySelector('#estado')<br />
+                            const estado = document.querySelector('#uf')<br />
+                            const bairro = document.querySelector('#bairro')<br />
                             const endereco = document.querySelector('#endereco')<br />
                             const numero = document.querySelector('#numero')<br />
                             const complemento = document.querySelector('#complemento')<br />
@@ -129,6 +131,20 @@
                             const senhaConfirm = document.querySelector('#senhaConfirm')<br />
                             const senhaConfirmEqual = document.querySelector('#senhaConfirmEqual')<br />
                             const btnEnviar = document.querySelector('#btnEnviar')
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Incluindo UFs disponíveis</h5>
+                    <p class="mt-3">Vamos definir cada <code>option</code> para as UFs.</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            ufs = ['AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT','PA','PB','PE','PI','PR','RJ','RN','RO','RR','RS','SC','SE', 'SP', 'TO']<br /><br />
+                            for(let uf of ufs) {<br />
+                            <span class="ml-3">estado.innerHTML += `</span><br />
+                            <span class="ml-5">&lt;option value="${uf}"&gt;${uf}&lt;/option&gt;</span><br />
+                            <span class="ml-3">`</span><br />
+                            }
                         </code>
                     </div>
                 </li>
@@ -231,11 +247,93 @@
                             btnEnviar.onclick = e => {<br /><br />
                             <span class="ml-3">e.preventDefault()</span><br />
                             <span class="ml-3">confirmado = confirm(`<br />
-                            <span class="ml-5">Antes de enviar seu formulário, gostaríamos de confirmar seus dados:\n</span><br />
-                            <span class="ml-5">Nome: ${nome.value} ${sobrenome.value}\n</span><br />
-                            <span class="ml-5">Email: ${email.value}\n</span><br />
-                            <span class="ml-3">`)</span><br />
-                            <span class="ml-3">confirmado && document.querySelector('#meuForm').submit()</span><br /><br />
+                                <span class="ml-5">Antes de enviar seu formulário, gostaríamos de confirmar seus dados:\n</span><br />
+                                <span class="ml-5">Nome: ${nome.value} ${sobrenome.value}\n</span><br />
+                                <span class="ml-5">Email: ${email.value}\n</span><br />
+                                <span class="ml-3">`)</span><br />
+                                <span class="ml-3">confirmado && formulario.submit()</span><br /><br />
+                                }
+                        </code>
+                    </div>
+                </li>
+            </ul>
+            <p class="mt-3">E aí, vamos fazer uma consulta à uma API?</p>
+        </article>
+        <article class="col-12 mx-auto my-4">
+            <h2 class="col-12">Prática 25 | Consulta à API ViaCEP</h2>
+            <ul class="col-12 py-3">
+                <li class="my-5">
+                    <h5>Atributo <code>onblur</code> do <code>input</code> do CEP</h5>
+                    <p class="mt-3">Mesmo sem termos definido a função que será executada para buscar o endereço a partir do CEP, vamos deixar isso pronto desde já.</p>
+                    <p class="mt-3">Vamos definir também um mínimo e máximo de dígitos para deixarmos 'no jeito' o CEP.</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            cep.setAttribute('onblur', 'pesquisarCep(this.value)')<br />
+                            cep.setAttribute('minlength', '8')<br />
+                            cep.setAttribute('maxlength', '9')<br />
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Endpoint do ViaCEP</h5>
+                    <p class="mt-3">Agora vamos criar um script que define a URL que será chamada para consultarmos o endereço a partir do CEP</p>
+                    <p class="mt-3">E também a nomearemos a função <i>callback</i> (a ser executada ao recebermos o retorno).</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            function pesquisarCep( el ) {<br /><br />
+                            <span class="ml-3">// Limpando o CEP e deixando apenas números</span><br />
+                            <span class="ml-3">let cepLimpo = el.replace(/\D/g,'')</span><br /><br />
+                            <span class="ml-3">// Garantindo que o CEP não está vazio e está no formato esperado</span><br />
+                            <span class="ml-3">let formatoCep = /^[0-9]{8}$/</span><br /><br />
+                            <span class="ml-3">if ( cepLimpo !== '' && formatoCep.test(cepLimpo) ) {</span><br /><br />
+                            <span class="ml-5">// Mostrando que os campos serão populados</span><br />
+                            <span class="ml-5">endereco.value = '...'</span><br />
+                            <span class="ml-5">bairro.value = '...'</span><br />
+                            <span class="ml-5">cidade.value = '...'</span><br />
+                            <span class="ml-5">estado.value = '...'</span><br /><br />
+                            <span class="ml-5">/**</span><br />
+                            <span class="ml-5"> * ### IMPORTANTE ###</span><br />
+                            <span class="ml-5"> * Criando o endpoint do ViaCEP</span><br />
+                            <span class="ml-5"> * <span class="text-white">callback=retorno_callback_viacep</span> é o parâmetro (do tipo query param)</span><br />
+                            <span class="ml-5"> * que chama a nossa função callback a partir do recebimento do retorno</span><br />
+                            <span class="ml-5"> *</span><br />
+                            <span class="ml-5"> */</span><br /><br />
+                            <span class="ml-5">scriptCep = document.createElement('script')</span><br />
+                            <span class="ml-5">scriptCep.src = `https://viacep.com.br/ws/${cepLimpo}/json/?callback=retorno_callback_viacep`</span><br />
+                            <span class="ml-5">document.querySelector('head').appendChild(scriptCep)</span><br /><br />
+                            <span class="ml-3">}</span><br /><br />
+                            }
+                        </code>
+                    </div>
+                </li>
+                <li class="my-5">
+                    <h5>Função Callback</h5>
+                    <p class="mt-3">E finalmente vamos popular nosso formulário com a resposta/retorno (ou <i>response</i>) vindo da API! Uhuuu!</p>
+                    <div class="bg-dark p-5">
+                        <code class="font-weight-bold">
+                            function retorno_callback_viacep(resposta) {<br /><br />
+                            <span class="ml-2">// Caso não haja erros...</span><br />
+                            <span class="ml-2">if ( !('erro' in resposta) ) {</span><br /><br />
+                            <span class="ml-4">// Populamos os campos</span><br />
+                            <span class="ml-4">endereco.value = resposta.logradouro</span><br />
+                            <span class="ml-4">bairro.value = resposta.bairro</span><br />
+                            <span class="ml-4">cidade.value = resposta.localidade</span><br /><br />
+                            <span class="ml-4">// E no caso da UF</span><br />
+                            <span class="ml-4">let estados = formulario.querySelectorAll('option')</span><br />
+                            <span class="ml-4">for(cadaEstado of estados){</span><br /><br />
+                                <span class="ml-5">cadaEstado.value === resposta.uf</span><br />
+                                <span class="ml-5">&& cadaEstado.setAttribute('selected','')</span><br /><br/>
+                            <span class="ml-4">}</span><br /><br />
+                            <span class="ml-4">// E direcionamos o usuário para o campo de número</span><br />
+                            <span class="ml-4">numero.focus()</span><br /><br />
+                            <span class="ml-2">} else {</span><br /><br />
+                                <span class="ml-4">// Se der erro, avisamos o usuário, limpamos os campos e focamos no campo CEP novamente</span><br />
+                                <span class="ml-4">alert('\nOps!\n\nInfelizmente não encontramos esse CEP...\n\nPor favor, verifique o CEP inserido\n\n')</span><br />
+                                <span class="ml-4">endereco.value = ''</span><br />
+                                <span class="ml-4">bairro.value = ''</span><br />
+                                <span class="ml-4">cidade.value = ''</span><br />
+                                <span class="ml-4">estado.value = ''</span><br />
+                            <span class="ml-2">}</span><br /><br />
                             }
                         </code>
                     </div>
